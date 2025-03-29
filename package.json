@@ -35,7 +35,14 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha"
+    "node": "npx hardhat node",
+    "test": "npx hardhat test",
+    "compile": "npx hardhat compile",
+    "deploy:local": "npx hardhat deploy ignition/modules/index.ts --network localhost",
+    "deploy:sepolia": "npx hardhat deploy ignition/modules/index.ts --network sepolia",
+    "typechain": "npx hardhat typechain",
+    "verify": "node scripts/verify.ts",
+    "verify:address": "npx hardhat verify --network sepolia xxx"
   },
   "keywords": [],
   "author": "",
