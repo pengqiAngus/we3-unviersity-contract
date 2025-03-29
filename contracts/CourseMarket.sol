@@ -64,8 +64,8 @@ contract CourseMarket is Ownable {
      * @param price 课程价格(YD代币)
      */
     function addCourse(
-        string memory web2CourseId,
-        string memory name,
+        string calldata web2CourseId,
+        string calldata name,
         uint256 price
     ) external onlyOwner {
         require(
@@ -93,7 +93,7 @@ contract CourseMarket is Ownable {
      * @notice 购买课程
      * @param web2CourseId Web2平台的课程ID
      */
-    function purchaseCourse(string memory web2CourseId) external {
+    function purchaseCourse(string calldata web2CourseId) external {
         uint256 courseId = web2ToCourseId[web2CourseId];
         require(courseId > 0, "Course does not exist");
 
@@ -118,7 +118,7 @@ contract CourseMarket is Ownable {
      */
     function verifyCourseCompletion(
         address student,
-        string memory web2CourseId
+        string calldata web2CourseId
     ) external onlyOwner {
         uint256 courseId = web2ToCourseId[web2CourseId];
         require(courseId > 0, "Course does not exist");
@@ -148,7 +148,7 @@ contract CourseMarket is Ownable {
      */
     function batchVerifyCourseCompletion(
         address[] memory students,
-        string memory web2CourseId
+        string calldata web2CourseId
     ) external onlyOwner {
         uint256 courseId = web2ToCourseId[web2CourseId];
         require(courseId > 0, "Course does not exist");
@@ -180,7 +180,7 @@ contract CourseMarket is Ownable {
      */
     function hasCourse(
         address user,
-        string memory web2CourseId
+        string calldata web2CourseId
     ) external view returns (bool) {
         uint256 courseId = web2ToCourseId[web2CourseId];
         require(courseId > 0, "Course does not exist");
@@ -194,7 +194,7 @@ contract CourseMarket is Ownable {
      */
     function generateCertificateURI(
         address student,
-        string memory web2CourseId
+        string calldata web2CourseId
     ) internal pure returns (string memory) {
         return
             string(
