@@ -146,14 +146,14 @@ contract YiDengToken is ERC20, Ownable {
     
     // 检查是否是多签成员
     modifier onlyMultiSigner() {
-        bool isSigner = false;
+        bool isMember = false;
         for (uint i = 0; i < signers.length; i++) {
             if (signers[i] == msg.sender) {
-                isSigner = true;
+                isMember = true;
                 break;
             }
         }
-        require(isSigner, "Not a signer");
+        require(isMember, "Not a sign member");
         _;
     }
     

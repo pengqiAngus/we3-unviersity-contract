@@ -31,6 +31,7 @@ export interface YiDengTokenInterface extends utils.Interface {
   functions: {
     "MAX_SUPPLY()": FunctionFragment;
     "TOKENS_PER_ETH()": FunctionFragment;
+    "addSigner(address)": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
@@ -39,27 +40,38 @@ export interface YiDengTokenInterface extends utils.Interface {
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "distributeInitialTokens(address,address,address)": FunctionFragment;
+    "getSignerCount()": FunctionFragment;
+    "hasSignedWithdrawal(uint256,address)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "initialDistributionDone()": FunctionFragment;
+    "isSigner(address)": FunctionFragment;
     "marketingAllocation()": FunctionFragment;
     "name()": FunctionFragment;
     "owner()": FunctionFragment;
     "remainingMintableSupply()": FunctionFragment;
+    "removeSigner(address)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
+    "requestWithdrawal(uint256,address)": FunctionFragment;
+    "requiredSignatures()": FunctionFragment;
     "sellTokens(uint256)": FunctionFragment;
+    "signWithdrawal(uint256)": FunctionFragment;
+    "signers(uint256)": FunctionFragment;
     "symbol()": FunctionFragment;
     "teamAllocation()": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
-    "withdrawETH()": FunctionFragment;
+    "updateRequiredSignatures(uint256)": FunctionFragment;
+    "withdrawalId()": FunctionFragment;
+    "withdrawalRequests(uint256)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
       | "MAX_SUPPLY"
       | "TOKENS_PER_ETH"
+      | "addSigner"
       | "allowance"
       | "approve"
       | "balanceOf"
@@ -68,21 +80,31 @@ export interface YiDengTokenInterface extends utils.Interface {
       | "decimals"
       | "decreaseAllowance"
       | "distributeInitialTokens"
+      | "getSignerCount"
+      | "hasSignedWithdrawal"
       | "increaseAllowance"
       | "initialDistributionDone"
+      | "isSigner"
       | "marketingAllocation"
       | "name"
       | "owner"
       | "remainingMintableSupply"
+      | "removeSigner"
       | "renounceOwnership"
+      | "requestWithdrawal"
+      | "requiredSignatures"
       | "sellTokens"
+      | "signWithdrawal"
+      | "signers"
       | "symbol"
       | "teamAllocation"
       | "totalSupply"
       | "transfer"
       | "transferFrom"
       | "transferOwnership"
-      | "withdrawETH"
+      | "updateRequiredSignatures"
+      | "withdrawalId"
+      | "withdrawalRequests"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -93,6 +115,7 @@ export interface YiDengTokenInterface extends utils.Interface {
     functionFragment: "TOKENS_PER_ETH",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "addSigner", values: [string]): string;
   encodeFunctionData(
     functionFragment: "allowance",
     values: [string, string]
@@ -120,6 +143,14 @@ export interface YiDengTokenInterface extends utils.Interface {
     values: [string, string, string]
   ): string;
   encodeFunctionData(
+    functionFragment: "getSignerCount",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "hasSignedWithdrawal",
+    values: [BigNumberish, string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "increaseAllowance",
     values: [string, BigNumberish]
   ): string;
@@ -127,6 +158,7 @@ export interface YiDengTokenInterface extends utils.Interface {
     functionFragment: "initialDistributionDone",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "isSigner", values: [string]): string;
   encodeFunctionData(
     functionFragment: "marketingAllocation",
     values?: undefined
@@ -138,11 +170,31 @@ export interface YiDengTokenInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "removeSigner",
+    values: [string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "requestWithdrawal",
+    values: [BigNumberish, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "requiredSignatures",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "sellTokens",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "signWithdrawal",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "signers",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
@@ -167,8 +219,16 @@ export interface YiDengTokenInterface extends utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(
-    functionFragment: "withdrawETH",
+    functionFragment: "updateRequiredSignatures",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "withdrawalId",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "withdrawalRequests",
+    values: [BigNumberish]
   ): string;
 
   decodeFunctionResult(functionFragment: "MAX_SUPPLY", data: BytesLike): Result;
@@ -176,6 +236,7 @@ export interface YiDengTokenInterface extends utils.Interface {
     functionFragment: "TOKENS_PER_ETH",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "addSigner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
@@ -194,6 +255,14 @@ export interface YiDengTokenInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "getSignerCount",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "hasSignedWithdrawal",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "increaseAllowance",
     data: BytesLike
   ): Result;
@@ -201,6 +270,7 @@ export interface YiDengTokenInterface extends utils.Interface {
     functionFragment: "initialDistributionDone",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "isSigner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "marketingAllocation",
     data: BytesLike
@@ -212,10 +282,27 @@ export interface YiDengTokenInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "removeSigner",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "requestWithdrawal",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "requiredSignatures",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "sellTokens", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "signWithdrawal",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "signers", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "teamAllocation",
@@ -235,7 +322,15 @@ export interface YiDengTokenInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "withdrawETH",
+    functionFragment: "updateRequiredSignatures",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "withdrawalId",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "withdrawalRequests",
     data: BytesLike
   ): Result;
 
@@ -246,6 +341,9 @@ export interface YiDengTokenInterface extends utils.Interface {
     "TokensPurchased(address,uint256,uint256)": EventFragment;
     "TokensSold(address,uint256,uint256)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
+    "WithdrawalExecuted(uint256,uint256,address)": EventFragment;
+    "WithdrawalRequested(uint256,uint256,address)": EventFragment;
+    "WithdrawalSigned(uint256,address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
@@ -256,6 +354,9 @@ export interface YiDengTokenInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "TokensPurchased"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TokensSold"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "WithdrawalExecuted"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "WithdrawalRequested"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "WithdrawalSigned"): EventFragment;
 }
 
 export interface ApprovalEventObject {
@@ -331,6 +432,44 @@ export type TransferEvent = TypedEvent<
 
 export type TransferEventFilter = TypedEventFilter<TransferEvent>;
 
+export interface WithdrawalExecutedEventObject {
+  withdrawalId: BigNumber;
+  amount: BigNumber;
+  recipient: string;
+}
+export type WithdrawalExecutedEvent = TypedEvent<
+  [BigNumber, BigNumber, string],
+  WithdrawalExecutedEventObject
+>;
+
+export type WithdrawalExecutedEventFilter =
+  TypedEventFilter<WithdrawalExecutedEvent>;
+
+export interface WithdrawalRequestedEventObject {
+  withdrawalId: BigNumber;
+  amount: BigNumber;
+  recipient: string;
+}
+export type WithdrawalRequestedEvent = TypedEvent<
+  [BigNumber, BigNumber, string],
+  WithdrawalRequestedEventObject
+>;
+
+export type WithdrawalRequestedEventFilter =
+  TypedEventFilter<WithdrawalRequestedEvent>;
+
+export interface WithdrawalSignedEventObject {
+  withdrawalId: BigNumber;
+  signer: string;
+}
+export type WithdrawalSignedEvent = TypedEvent<
+  [BigNumber, string],
+  WithdrawalSignedEventObject
+>;
+
+export type WithdrawalSignedEventFilter =
+  TypedEventFilter<WithdrawalSignedEvent>;
+
 export interface YiDengToken extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
@@ -361,6 +500,11 @@ export interface YiDengToken extends BaseContract {
     MAX_SUPPLY(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     TOKENS_PER_ETH(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    addSigner(
+      newSigner: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
 
     allowance(
       owner: string,
@@ -397,6 +541,14 @@ export interface YiDengToken extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
+    getSignerCount(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    hasSignedWithdrawal(
+      requestId: BigNumberish,
+      signer: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -404,6 +556,8 @@ export interface YiDengToken extends BaseContract {
     ): Promise<ContractTransaction>;
 
     initialDistributionDone(overrides?: CallOverrides): Promise<[boolean]>;
+
+    isSigner(account: string, overrides?: CallOverrides): Promise<[boolean]>;
 
     marketingAllocation(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -413,14 +567,34 @@ export interface YiDengToken extends BaseContract {
 
     remainingMintableSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    removeSigner(
+      signerToRemove: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
     renounceOwnership(
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
+
+    requestWithdrawal(
+      amount: BigNumberish,
+      recipient: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    requiredSignatures(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     sellTokens(
       tokenAmount: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
+
+    signWithdrawal(
+      requestId: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    signers(arg0: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
 
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
@@ -446,14 +620,34 @@ export interface YiDengToken extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
-    withdrawETH(
+    updateRequiredSignatures(
+      newRequiredSignatures: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
+
+    withdrawalId(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    withdrawalRequests(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, string, boolean] & {
+        amount: BigNumber;
+        signatureCount: BigNumber;
+        recipient: string;
+        executed: boolean;
+      }
+    >;
   };
 
   MAX_SUPPLY(overrides?: CallOverrides): Promise<BigNumber>;
 
   TOKENS_PER_ETH(overrides?: CallOverrides): Promise<BigNumber>;
+
+  addSigner(
+    newSigner: string,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
 
   allowance(
     owner: string,
@@ -490,6 +684,14 @@ export interface YiDengToken extends BaseContract {
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
+  getSignerCount(overrides?: CallOverrides): Promise<BigNumber>;
+
+  hasSignedWithdrawal(
+    requestId: BigNumberish,
+    signer: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   increaseAllowance(
     spender: string,
     addedValue: BigNumberish,
@@ -497,6 +699,8 @@ export interface YiDengToken extends BaseContract {
   ): Promise<ContractTransaction>;
 
   initialDistributionDone(overrides?: CallOverrides): Promise<boolean>;
+
+  isSigner(account: string, overrides?: CallOverrides): Promise<boolean>;
 
   marketingAllocation(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -506,14 +710,34 @@ export interface YiDengToken extends BaseContract {
 
   remainingMintableSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
+  removeSigner(
+    signerToRemove: string,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
   renounceOwnership(
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
+
+  requestWithdrawal(
+    amount: BigNumberish,
+    recipient: string,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  requiredSignatures(overrides?: CallOverrides): Promise<BigNumber>;
 
   sellTokens(
     tokenAmount: BigNumberish,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
+
+  signWithdrawal(
+    requestId: BigNumberish,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  signers(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
   symbol(overrides?: CallOverrides): Promise<string>;
 
@@ -539,14 +763,31 @@ export interface YiDengToken extends BaseContract {
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
-  withdrawETH(
+  updateRequiredSignatures(
+    newRequiredSignatures: BigNumberish,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
+
+  withdrawalId(overrides?: CallOverrides): Promise<BigNumber>;
+
+  withdrawalRequests(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber, BigNumber, string, boolean] & {
+      amount: BigNumber;
+      signatureCount: BigNumber;
+      recipient: string;
+      executed: boolean;
+    }
+  >;
 
   callStatic: {
     MAX_SUPPLY(overrides?: CallOverrides): Promise<BigNumber>;
 
     TOKENS_PER_ETH(overrides?: CallOverrides): Promise<BigNumber>;
+
+    addSigner(newSigner: string, overrides?: CallOverrides): Promise<void>;
 
     allowance(
       owner: string,
@@ -581,6 +822,14 @@ export interface YiDengToken extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    getSignerCount(overrides?: CallOverrides): Promise<BigNumber>;
+
+    hasSignedWithdrawal(
+      requestId: BigNumberish,
+      signer: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -588,6 +837,8 @@ export interface YiDengToken extends BaseContract {
     ): Promise<boolean>;
 
     initialDistributionDone(overrides?: CallOverrides): Promise<boolean>;
+
+    isSigner(account: string, overrides?: CallOverrides): Promise<boolean>;
 
     marketingAllocation(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -597,12 +848,32 @@ export interface YiDengToken extends BaseContract {
 
     remainingMintableSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
+    removeSigner(
+      signerToRemove: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
+
+    requestWithdrawal(
+      amount: BigNumberish,
+      recipient: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    requiredSignatures(overrides?: CallOverrides): Promise<BigNumber>;
 
     sellTokens(
       tokenAmount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    signWithdrawal(
+      requestId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    signers(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
     symbol(overrides?: CallOverrides): Promise<string>;
 
@@ -628,7 +899,24 @@ export interface YiDengToken extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    withdrawETH(overrides?: CallOverrides): Promise<void>;
+    updateRequiredSignatures(
+      newRequiredSignatures: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    withdrawalId(overrides?: CallOverrides): Promise<BigNumber>;
+
+    withdrawalRequests(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, string, boolean] & {
+        amount: BigNumber;
+        signatureCount: BigNumber;
+        recipient: string;
+        executed: boolean;
+      }
+    >;
   };
 
   filters: {
@@ -695,12 +983,48 @@ export interface YiDengToken extends BaseContract {
       to?: string | null,
       value?: null
     ): TransferEventFilter;
+
+    "WithdrawalExecuted(uint256,uint256,address)"(
+      withdrawalId?: BigNumberish | null,
+      amount?: null,
+      recipient?: null
+    ): WithdrawalExecutedEventFilter;
+    WithdrawalExecuted(
+      withdrawalId?: BigNumberish | null,
+      amount?: null,
+      recipient?: null
+    ): WithdrawalExecutedEventFilter;
+
+    "WithdrawalRequested(uint256,uint256,address)"(
+      withdrawalId?: BigNumberish | null,
+      amount?: null,
+      recipient?: null
+    ): WithdrawalRequestedEventFilter;
+    WithdrawalRequested(
+      withdrawalId?: BigNumberish | null,
+      amount?: null,
+      recipient?: null
+    ): WithdrawalRequestedEventFilter;
+
+    "WithdrawalSigned(uint256,address)"(
+      withdrawalId?: BigNumberish | null,
+      signer?: null
+    ): WithdrawalSignedEventFilter;
+    WithdrawalSigned(
+      withdrawalId?: BigNumberish | null,
+      signer?: null
+    ): WithdrawalSignedEventFilter;
   };
 
   estimateGas: {
     MAX_SUPPLY(overrides?: CallOverrides): Promise<BigNumber>;
 
     TOKENS_PER_ETH(overrides?: CallOverrides): Promise<BigNumber>;
+
+    addSigner(
+      newSigner: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
 
     allowance(
       owner: string,
@@ -737,6 +1061,14 @@ export interface YiDengToken extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
+    getSignerCount(overrides?: CallOverrides): Promise<BigNumber>;
+
+    hasSignedWithdrawal(
+      requestId: BigNumberish,
+      signer: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -744,6 +1076,8 @@ export interface YiDengToken extends BaseContract {
     ): Promise<BigNumber>;
 
     initialDistributionDone(overrides?: CallOverrides): Promise<BigNumber>;
+
+    isSigner(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     marketingAllocation(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -753,14 +1087,34 @@ export interface YiDengToken extends BaseContract {
 
     remainingMintableSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
+    removeSigner(
+      signerToRemove: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
     renounceOwnership(
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
+
+    requestWithdrawal(
+      amount: BigNumberish,
+      recipient: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    requiredSignatures(overrides?: CallOverrides): Promise<BigNumber>;
 
     sellTokens(
       tokenAmount: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
+
+    signWithdrawal(
+      requestId: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    signers(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -786,13 +1140,28 @@ export interface YiDengToken extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    withdrawETH(overrides?: Overrides & { from?: string }): Promise<BigNumber>;
+    updateRequiredSignatures(
+      newRequiredSignatures: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    withdrawalId(overrides?: CallOverrides): Promise<BigNumber>;
+
+    withdrawalRequests(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     MAX_SUPPLY(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     TOKENS_PER_ETH(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    addSigner(
+      newSigner: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
 
     allowance(
       owner: string,
@@ -834,6 +1203,14 @@ export interface YiDengToken extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
+    getSignerCount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    hasSignedWithdrawal(
+      requestId: BigNumberish,
+      signer: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -841,6 +1218,11 @@ export interface YiDengToken extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     initialDistributionDone(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    isSigner(
+      account: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -856,13 +1238,38 @@ export interface YiDengToken extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    removeSigner(
+      signerToRemove: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
     renounceOwnership(
       overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    requestWithdrawal(
+      amount: BigNumberish,
+      recipient: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    requiredSignatures(
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     sellTokens(
       tokenAmount: BigNumberish,
       overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    signWithdrawal(
+      requestId: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    signers(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -889,8 +1296,16 @@ export interface YiDengToken extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
-    withdrawETH(
+    updateRequiredSignatures(
+      newRequiredSignatures: BigNumberish,
       overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    withdrawalId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    withdrawalRequests(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };
 }
