@@ -60,7 +60,7 @@ contract CourseCertificate is ERC721, AccessControl {
      */
     function mintCertificate(
         address student,
-        string memory web2CourseId,
+        string calldata web2CourseId,
         string memory metadataURI
     ) external onlyRole(MINTER_ROLE) returns (uint256) {
         require(student != address(0), "Invalid student address");
@@ -105,7 +105,7 @@ contract CourseCertificate is ERC721, AccessControl {
      */
     function hasCertificate(
         address student,
-        string memory web2CourseId
+        string calldata web2CourseId
     ) public view returns (bool) {
         return studentCertificates[web2CourseId][student].length > 0;
     }
@@ -117,7 +117,7 @@ contract CourseCertificate is ERC721, AccessControl {
      */
     function getStudentCertificates(
         address student,
-        string memory web2CourseId
+        string calldata web2CourseId
     ) public view returns (uint256[] memory) {
         return studentCertificates[web2CourseId][student];
     }
