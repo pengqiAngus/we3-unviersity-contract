@@ -97,6 +97,11 @@ contract YiDengToken is ERC20, Ownable {
             communityWallet
         );
     }
+    
+    // 获取当前用户的 YiDengToken 余额
+    function getMyBalance() external view returns (uint256) {
+        return balanceOf(msg.sender);
+    }
 
     // 使用 ETH 购买 YD 代币的函数
     function buyWithETH() external payable {
