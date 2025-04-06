@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.28;
+pragma solidity ^0.8.0;
 
 // 导入 OpenZeppelin 的 ERC20 标准合约
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 // YiDengToken 合约，继承自 ERC20 和 Ownable
-contract YiDengToken is ERC20, Ownable {
+contract YidengToken is ERC20, Ownable {
     // 定义 ETH 兑换 YD 的比率：1 ETH = 1000 YD
     uint256 public constant TOKENS_PER_ETH = 1000;
     // 定义代币最大供应量：125万 YD（包含 18 位小数）
@@ -23,32 +23,58 @@ contract YiDengToken is ERC20, Ownable {
 
     // 标记初始代币分配是否已完成
     bool public initialDistributionDone;
+
+    // 多签相关变量
+    address[] public signers; // 多签人列表
+    uint256 public requiredSignatures; // 需要的签名数量
+    uint256 public withdrawalId; // 提款请求ID计数器
+
+    constructor() ERC20("YidengToken", "YDT") {
+        _transferOwnership(msg.sender);
+
+        // 计算各个分配额度
+        teamAllocation = (MAX_SUPPLY * 20) / 100; // 20% 分配给团队
+        marketingAllocation = (MAX_SUPPLY * 10) / 100; // 10% 分配给市场营销
+        communityAllocation = (MAX_SUPPLY * 10) / 100; // 10% 分配给社区
+
+        // 初始化多签，默认只有合约所有者
+        signers.push(msg.sender);
+        requiredSignatures = 1;
+    }
+
+    function mint(address to, uint256 amount) public onlyOwner {
+        _mint(to, amount);
+    }
+
     function decimals() public view virtual override returns (uint8) {
         return 0;
     }
-    
-    // 多签相关变量
-    address[] public signers;               // 多签人列表
-    uint256 public requiredSignatures;      // 需要的签名数量
-    uint256 public withdrawalId;            // 提款请求ID计数器
-    
+
     // 提款请求结构体
     struct WithdrawalRequest {
-        uint256 amount;                     // 提款金额
-        uint256 signatureCount;             // 已签名数量
-        address recipient;                  // 接收者地址
-        bool executed;                      // 是否已执行
-        mapping(address => bool) signatures;// 签名记录
+        uint256 amount; // 提款金额
+        uint256 signatureCount; // 已签名数量
+        address recipient; // 接收者地址
+        bool executed; // 是否已执行
+        mapping(address => bool) signatures; // 签名记录
     }
-    
+
     // 提款请求映射
     mapping(uint256 => WithdrawalRequest) public withdrawalRequests;
-    
+
     // 新增事件
-    event WithdrawalRequested(uint256 indexed withdrawalId, uint256 amount, address recipient);
+    event WithdrawalRequested(
+        uint256 indexed withdrawalId,
+        uint256 amount,
+        address recipient
+    );
     event WithdrawalSigned(uint256 indexed withdrawalId, address signer);
-    event WithdrawalExecuted(uint256 indexed withdrawalId, uint256 amount, address recipient);
-    
+    event WithdrawalExecuted(
+        uint256 indexed withdrawalId,
+        uint256 amount,
+        address recipient
+    );
+
     // 原有事件定义
     event TokensPurchased(
         address indexed buyer,
@@ -65,18 +91,6 @@ contract YiDengToken is ERC20, Ownable {
         address marketingWallet,
         address communityWallet
     );
-
-    // 构造函数：初始化代币名称为 "YiDeng Token"，符号为 "YD"
-    constructor() ERC20("YiDeng Token", "YD") {
-        // 计算各个分配额度
-        teamAllocation = (MAX_SUPPLY * 20) / 100; // 20% 分配给团队
-        marketingAllocation = (MAX_SUPPLY * 10) / 100; // 10% 分配给市场营销
-        communityAllocation = (MAX_SUPPLY * 10) / 100; // 10% 分配给社区
-        
-        // 初始化多签，默认只有合约所有者
-        signers.push(msg.sender);
-        requiredSignatures = 1;
-    }
 
     // 初始代币分配函数，只能由合约所有者调用
     function distributeInitialTokens(
@@ -143,7 +157,7 @@ contract YiDengToken is ERC20, Ownable {
     }
 
     // 多签相关功能 ----------------------------------------
-    
+
     // 检查是否是多签成员
     modifier onlyMultiSigner() {
         bool isMember = false;
@@ -156,23 +170,26 @@ contract YiDengToken is ERC20, Ownable {
         require(isMember, "Not a sign member");
         _;
     }
-    
+
     // 添加多签成员（只有合约所有者可调用）
     function addSigner(address newSigner) external onlyOwner {
         require(newSigner != address(0), "Invalid address");
-        
+
         // 检查是否已经是多签成员
         for (uint i = 0; i < signers.length; i++) {
             require(signers[i] != newSigner, "Already a signer");
         }
-        
+
         signers.push(newSigner);
     }
-    
+
     // 移除多签成员（只有合约所有者可调用）
     function removeSigner(address signerToRemove) external onlyOwner {
-        require(signers.length > requiredSignatures, "Cannot remove: too few signers");
-        
+        require(
+            signers.length > requiredSignatures,
+            "Cannot remove: too few signers"
+        );
+
         uint indexToRemove = signers.length;
         for (uint i = 0; i < signers.length; i++) {
             if (signers[i] == signerToRemove) {
@@ -180,86 +197,103 @@ contract YiDengToken is ERC20, Ownable {
                 break;
             }
         }
-        
+
         require(indexToRemove < signers.length, "Signer not found");
-        
+
         // 将最后一个元素移到要删除的位置，然后删除最后一个元素
         signers[indexToRemove] = signers[signers.length - 1];
         signers.pop();
     }
-    
+
     // 修改所需签名数量（只有合约所有者可调用）
-    function updateRequiredSignatures(uint256 newRequiredSignatures) external onlyOwner {
+    function updateRequiredSignatures(
+        uint256 newRequiredSignatures
+    ) external onlyOwner {
         require(newRequiredSignatures > 0, "Must require at least 1 signature");
-        require(newRequiredSignatures <= signers.length, "Cannot require more signatures than signers");
-        
+        require(
+            newRequiredSignatures <= signers.length,
+            "Cannot require more signatures than signers"
+        );
+
         requiredSignatures = newRequiredSignatures;
     }
-    
+
     // 发起提款请求（任何多签成员都可以发起）
-    function requestWithdrawal(uint256 amount, address recipient) external onlyMultiSigner {
+    function requestWithdrawal(
+        uint256 amount,
+        address recipient
+    ) external onlyMultiSigner {
         require(amount > 0, "Amount must be greater than 0");
         require(recipient != address(0), "Invalid recipient address");
-        require(address(this).balance >= amount, "Insufficient contract balance");
-        
+        require(
+            address(this).balance >= amount,
+            "Insufficient contract balance"
+        );
+
         uint256 requestId = withdrawalId;
         withdrawalId += 1;
-        
+
         WithdrawalRequest storage request = withdrawalRequests[requestId];
         request.amount = amount;
         request.recipient = recipient;
         request.executed = false;
-        request.signatureCount = 1;  // 创建者自动签名
+        request.signatureCount = 1; // 创建者自动签名
         request.signatures[msg.sender] = true;
-        
+
         emit WithdrawalRequested(requestId, amount, recipient);
         emit WithdrawalSigned(requestId, msg.sender);
-        
+
         // 如果只需要一个签名，则直接执行
         if (requiredSignatures == 1) {
             executeWithdrawal(requestId);
         }
     }
-    
+
     // 签名提款请求
     function signWithdrawal(uint256 requestId) external onlyMultiSigner {
         WithdrawalRequest storage request = withdrawalRequests[requestId];
-        
+
         require(!request.executed, "Withdrawal already executed");
         require(!request.signatures[msg.sender], "Already signed");
-        
+
         request.signatures[msg.sender] = true;
         request.signatureCount += 1;
-        
+
         emit WithdrawalSigned(requestId, msg.sender);
-        
+
         // 检查是否达到所需签名数量
         if (request.signatureCount >= requiredSignatures) {
             executeWithdrawal(requestId);
         }
     }
-    
+
     // 执行提款（内部函数）
     function executeWithdrawal(uint256 requestId) internal {
         WithdrawalRequest storage request = withdrawalRequests[requestId];
-        
+
         require(!request.executed, "Withdrawal already executed");
-        require(request.signatureCount >= requiredSignatures, "Not enough signatures");
-        require(address(this).balance >= request.amount, "Insufficient contract balance");
-        
+        require(
+            request.signatureCount >= requiredSignatures,
+            "Not enough signatures"
+        );
+        require(
+            address(this).balance >= request.amount,
+            "Insufficient contract balance"
+        );
+
         request.executed = true;
-        
+
         (bool success, ) = request.recipient.call{value: request.amount}("");
         require(success, "ETH transfer failed");
-        
+
         emit WithdrawalExecuted(requestId, request.amount, request.recipient);
     }
-    
+
     // 获取多签成员数量
     function getSignerCount() external view returns (uint256) {
         return signers.length;
     }
-    
+
     // 检查地址是否为多签成员
     function isSigner(address account) external view returns (bool) {
         for (uint i = 0; i < signers.length; i++) {
@@ -269,9 +303,12 @@ contract YiDengToken is ERC20, Ownable {
         }
         return false;
     }
-    
+
     // 检查是否已经签名特定提款请求
-    function hasSignedWithdrawal(uint256 requestId, address signer) external view returns (bool) {
+    function hasSignedWithdrawal(
+        uint256 requestId,
+        address signer
+    ) external view returns (bool) {
         return withdrawalRequests[requestId].signatures[signer];
     }
 
