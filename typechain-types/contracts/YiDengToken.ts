@@ -40,6 +40,7 @@ export interface YiDengTokenInterface extends utils.Interface {
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "distributeInitialTokens(address,address,address)": FunctionFragment;
+    "getMyBalance()": FunctionFragment;
     "getSignerCount()": FunctionFragment;
     "hasSignedWithdrawal(uint256,address)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
@@ -80,6 +81,7 @@ export interface YiDengTokenInterface extends utils.Interface {
       | "decimals"
       | "decreaseAllowance"
       | "distributeInitialTokens"
+      | "getMyBalance"
       | "getSignerCount"
       | "hasSignedWithdrawal"
       | "increaseAllowance"
@@ -141,6 +143,10 @@ export interface YiDengTokenInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "distributeInitialTokens",
     values: [string, string, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getMyBalance",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "getSignerCount",
@@ -252,6 +258,10 @@ export interface YiDengTokenInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "distributeInitialTokens",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getMyBalance",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -541,6 +551,8 @@ export interface YiDengToken extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
+    getMyBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     getSignerCount(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     hasSignedWithdrawal(
@@ -684,6 +696,8 @@ export interface YiDengToken extends BaseContract {
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
+  getMyBalance(overrides?: CallOverrides): Promise<BigNumber>;
+
   getSignerCount(overrides?: CallOverrides): Promise<BigNumber>;
 
   hasSignedWithdrawal(
@@ -821,6 +835,8 @@ export interface YiDengToken extends BaseContract {
       communityWallet: string,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    getMyBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
     getSignerCount(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1061,6 +1077,8 @@ export interface YiDengToken extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
+    getMyBalance(overrides?: CallOverrides): Promise<BigNumber>;
+
     getSignerCount(overrides?: CallOverrides): Promise<BigNumber>;
 
     hasSignedWithdrawal(
@@ -1202,6 +1220,8 @@ export interface YiDengToken extends BaseContract {
       communityWallet: string,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
+
+    getMyBalance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getSignerCount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
